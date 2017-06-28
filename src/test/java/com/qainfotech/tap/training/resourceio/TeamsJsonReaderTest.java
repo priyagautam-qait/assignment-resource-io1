@@ -2,6 +2,8 @@ package com.qainfotech.tap.training.resourceio;
 
 import com.qainfotech.tap.training.resourceio.exceptions.ObjectNotFoundException;
 import com.qainfotech.tap.training.resourceio.model.Individual;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import static org.assertj.core.api.Assertions.*;
 import org.testng.annotations.BeforeTest;
@@ -45,7 +47,7 @@ public class TeamsJsonReaderTest {
     }
     
     @Test
-    public void getListOfInactiveIndividuals_should_return_array_list_of_only_inactive_individual_objects(){
+    public void getListOfInactiveIndividuals_should_return_array_list_of_only_inactive_individual_objects() throws FileNotFoundException, IOException{
         
         assertThat(teamReader.getListOfInactiveIndividuals().size()).isEqualTo(1);
         for(Individual individual:teamReader.getListOfInactiveIndividuals()){
@@ -86,7 +88,7 @@ public class TeamsJsonReaderTest {
     }
     
     @Test
-    public void getListOfTeams_should_return_a_list_if_Team_object_from_db_json(){
+    public void getListOfTeams_should_return_a_list_if_Team_object_from_db_json() throws FileNotFoundException, IOException{
         
         assertThat(teamReader.getListOfTeams().size()).isEqualTo(2);
         assertThat(teamReader.getListOfTeams().get(0).getId()).isEqualTo(1001);
@@ -102,7 +104,7 @@ public class TeamsJsonReaderTest {
     }
     
     @Test
-    public void Team_getActiveMembers_should_return_a_list_of_team_members_that_are_active(){
+    public void Team_getActiveMembers_should_return_a_list_of_team_members_that_are_active() throws FileNotFoundException, IOException{
         assertThat(teamReader.getListOfTeams().get(0).getActiveMembers().size())
                 .isEqualTo(2);
         assertThat(teamReader.getListOfTeams().get(1).getActiveMembers().size())
@@ -110,7 +112,7 @@ public class TeamsJsonReaderTest {
     }
     
     @Test
-    public void Team_getInactiveMembers_should_return_a_list_of_individual_team_members_that_are_inactive(){
+    public void Team_getInactiveMembers_should_return_a_list_of_individual_team_members_that_are_inactive() throws FileNotFoundException, IOException{
         assertThat(teamReader.getListOfTeams().get(0).getInactiveMembers()
                 .size()).isEqualTo(1);
         assertThat(teamReader.getListOfTeams().get(0).getInactiveMembers()
