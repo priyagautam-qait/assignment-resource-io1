@@ -28,7 +28,7 @@ public class TeamsJsonReader{
      * @return 
      */
 	JSONParser parser = new JSONParser();
-	JSONObject obj = null;
+	JSONObject obj = null; 
 	
      	
     	List<Individual> individualList = new ArrayList<Individual>();
