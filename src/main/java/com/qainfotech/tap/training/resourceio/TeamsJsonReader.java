@@ -153,9 +153,9 @@ public class TeamsJsonReader{
     	
     for(int i=0;i<individualList.size();i++)
     {
-    	if(individualList.get(i).isActive()==false)
+    	   if(individualList.get(i).isActive()==false)
     	{
-    		List_inactive.add(individualList.get(i));
+    	    	List_inactive.add(individualList.get(i));
     	}
      }
     return(List<Individual>) List_inactive;
@@ -201,7 +201,20 @@ public class TeamsJsonReader{
      */
     public List<Team> getListOfTeams() throws FileNotFoundException, IOException{
        //throw new UnsupportedOperationException("Not implemented.");
-   		try {
+   		
+    	try {
+			if(this.getListOfIndividuals()==null)
+			 this.getListOfIndividuals();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
+    	try {
 						teamList.clear();
 				obj = (JSONObject) parser.parse(new FileReader("src/main/resources/db.json"));
 			} catch (FileNotFoundException e) {

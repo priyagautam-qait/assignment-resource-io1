@@ -25,11 +25,13 @@ public class Team {
     public Team(Map<String, Object> teamMap) throws FileNotFoundException, IOException
     {
         //throw new UnsupportedOperationException("Not implemented.");
+    
          Map<String,Object> tmap = teamMap;
    
           name = tmap.get("name").toString();
           id = Integer.parseInt(tmap.get("id").toString());
-          members = (List<Individual>) tmap.get("memberobj");
+         
+          this.members=new ArrayList<>();
           
          JSONArray team_jarray = (JSONArray) tmap.get("members");
          List<Individual> ind_list = tobj.getListOfIndividuals();
@@ -119,7 +121,7 @@ public class Team {
      */
     public List<Individual> getInactiveMembers(){
         //throw new UnsupportedOperationException("Not implemented.");
-    try {
+  /*  try {
 		if(tobj.getListOfTeams()==null)
 		       tobj.getListOfTeams();
 	} catch (FileNotFoundException e) {
@@ -129,7 +131,7 @@ public class Team {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-    	
+    	*/
     	
     	List<Individual> inactivememberlist=new ArrayList<Individual>();
     	    
@@ -137,7 +139,7 @@ public class Team {
          while(itr.hasNext()){
 
              Individual individual=itr.next();
-             if(individual.isActive())
+             if(!(individual.isActive()))
              {
              	 inactivememberlist.add(individual);
              }
