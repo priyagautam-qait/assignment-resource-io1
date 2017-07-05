@@ -10,6 +10,7 @@ import java.util.Iterator;
 import org.json.simple.JSONArray;
 
 import com.qainfotech.tap.training.resourceio.TeamsJsonReader;
+import com.qainfotech.tap.training.resourceio.exceptions.ObjectNotFoundException;
 
 /**
  *
@@ -17,38 +18,35 @@ import com.qainfotech.tap.training.resourceio.TeamsJsonReader;
  */
 public class Team {
     
-    private final String name;
-    private final Integer id;
-    private final List<Individual> members;
-    TeamsJsonReader tobj = new TeamsJsonReader();
-   
-    public Team(Map<String, Object> teamMap) throws FileNotFoundException, IOException
-    {
-        //throw new UnsupportedOperationException("Not implemented.");
-    
-         Map<String,Object> tmap = teamMap;
-   
-          name = tmap.get("name").toString();
-          id = Integer.parseInt(tmap.get("id").toString());
-         
-          this.members=new ArrayList<>();
-          
-         JSONArray team_jarray = (JSONArray) tmap.get("members");
-         List<Individual> ind_list = tobj.getListOfIndividuals();
-         Iterator<Individual> itr=   ind_list.iterator();
-         while(itr.hasNext())
-         {
-        	Individual ind_obj=itr.next();
-        
-        	for(int j=0;j<team_jarray.size();j++)
-        	{
-        		if(ind_obj.getId() == Integer.parseInt(team_jarray.get(j).toString() ))
-        		{
-        			
-        		   this.members.add(ind_obj);
-        		}
-        	}
-  }
+	 private final String name;
+	    private final Integer id;
+	    private final List<Individual> members;
+	    TeamsJsonReader tobj=new TeamsJsonReader();
+	    
+	    public Team(Map<String, Object> teamMap){
+	    	
+	    	
+	    	Integer id=null;
+	    	String name=null;
+	    	List<Individual> members=null;
+	    	
+	    	for(Map.Entry<String, Object> entry : teamMap.entrySet()){
+	    		
+	    		if (entry.getKey() == "id") {
+	                id = (Integer) entry.getValue();
+	            }
+	    		if (entry.getKey() == "name") {
+	               name =  entry.getValue().toString();
+	            }
+	    		if (entry.getKey() == "members") {
+	               members = (List<Individual>) entry.getValue();
+	            }
+	    	}
+	    		
+	    		this.id=id;
+	    		this.name=name;
+	    		this.members=members;
+	    
     }
     
     /**
@@ -82,8 +80,9 @@ public class Team {
      * get a list of individuals that are members of this team and are also active
      * 
      * @return 
+     * @throws ObjectNotFoundException 
      */
-    public List<Individual> getActiveMembers()
+    public List<Individual> getActiveMembers() throws ObjectNotFoundException
     {
     	
     	

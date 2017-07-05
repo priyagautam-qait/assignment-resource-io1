@@ -5,13 +5,14 @@ import com.qainfotech.tap.training.resourceio.model.Individual;
 import com.qainfotech.tap.training.resourceio.model.Team;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -198,55 +199,58 @@ public class TeamsJsonReader{
      * @return 
      * @throws IOException 
      * @throws FileNotFoundException 
+     * @throws ObjectNotFoundException 
      */
-    public List<Team> getListOfTeams() throws FileNotFoundException, IOException{
+    public List<Team> getListOfTeams() throws FileNotFoundException, IOException, ObjectNotFoundException{
        //throw new UnsupportedOperationException("Not implemented.");
    		
-    	try {
-			if(this.getListOfIndividuals()==null)
-			 this.getListOfIndividuals();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+     	
+    	JSONObject jo=null;
+    	List<Team> listTeam=new ArrayList<Team>();
+    	Team teamObject = null;
+    	Map<String,Object> map=new HashMap<String, Object>();
+    	JSONParser parser=new JSONParser();
+    	 Object obj = null;
+		try {
+			obj = parser.parse(new FileReader("C:/Users/priyagautam/git/assignment-resource-io/src/main/resources/db.json"));
+		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-    	
-    	try {
-						teamList.clear();
-				obj = (JSONObject) parser.parse(new FileReader("src/main/resources/db.json"));
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-			JSONObject jsonObject1 = (JSONObject) obj;	
-    		JSONArray teamj_array = (JSONArray) jsonObject1.get("teams");
-    		
-    		JSONObject myobj1;
-    		Map<String, Object> team_map;
-    		for (int i = 0; i < teamj_array.size(); i++) 
-    		{
-    			myobj1= (JSONObject) teamj_array.get(i);
-                team_map=(Map<String, Object>) myobj1.clone();
-                Team ind=new Team(team_map);
-                 teamList.add(ind);
+    	 JSONObject jsonObject = (JSONObject) obj;
+    	 JSONArray jsonarray = (JSONArray) jsonObject.get("teams");
+    	 TeamsJsonReader reader = new TeamsJsonReader();
+    	 
+    	 for (int i=0; i<jsonarray.size(); i++)
+    	 {
+    		 List<Individual> individualList = new ArrayList<>();
+    		 jo=(JSONObject) jsonarray.get(i);
+    		 map.put("name", jo.get("name"));
+    		 map.put("id", ((Long) jo.get("id")).intValue());
+    		 
+    		 JSONArray memberArray = (JSONArray) jo.get("members");
+    		 for (int index = 0; index < memberArray.size(); index++) {
+
+					individualList.add(reader.getIndividualById(((Long) memberArray.get(index)).intValue()));
+
+				}
+    		 
+    		 
+    		 map.put("members", individualList);
+    		teamObject= new Team(map);
+				listTeam.add(teamObject);
+					 
+    	 }
+    	 return listTeam;
     		}
-    			return teamList;
     		
-  }
+    	    
+    	
 
 public static void main(String...arg)
 {
 	
 }
+
 
 }
